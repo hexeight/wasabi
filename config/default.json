@@ -1,0 +1,6 @@
+{
+    "endpoint": "http://blockrtc7.westeurope.cloudapp.azure.com:8545",
+    "gas": "100000",
+    "from": "0x7df20af045869764f94a54edf9b00e5c1fef3244",
+    "contract": "contract x { function g() {} }"
+}

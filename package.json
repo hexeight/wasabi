@@ -1,0 +1,28 @@
+{
+  "name": "EthPush",
+  "version": "0.0.1",
+  "main": "app.js",
+  "description": "Easy deployments for smart contracts",
+  "author": "Omkar Khair",
+  "homepage": "http://0x8.in",
+  "keywords": [
+    "ethereum",
+    "smart contract"
+  ],
+  "directories": {},
+  "license": "MIT",
+  "dependencies": {
+    "config": "^1.26.1",
+    "solc": "^0.4.11",
+    "web3": "^0.19.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/hexeight/ethpush.git"
+  },
+  "engines": {
+    "node": ">0.5.x"
+  },
+  "scripts": {}
+}
