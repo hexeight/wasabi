@@ -1,5 +1,5 @@
 {
-  "name": "EthPush",
+  "name": "wasabi",
   "version": "0.0.1",
   "main": "app.js",
   "description": "Easy deployments for smart contracts",
@@ -9,9 +9,13 @@
     "ethereum",
     "smart contract"
   ],
+  "bin": {
+    "wasabi": "./wasabi.js"
+  },
   "directories": {},
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.9.0",
     "config": "^1.26.1",
     "solc": "^0.4.11",
     "web3": "^0.19.0"
@@ -19,7 +23,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "http://github.com/hexeight/ethpush.git"
+    "url": "http://github.com/hexeight/wasabi.git"
   },
   "engines": {
     "node": ">0.5.x"

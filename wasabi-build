@@ -8,6 +8,7 @@ web3.setProvider(new web3.providers.HttpProvider(Config.get('host')));
 
 // Set Gas price
 var gasPrice = Config.get('maxGas');
+console.log("Max gas price set to:", gasPrice);
 
 // Set address
 var fromAddress = (Config.has('from')) ? Config.get('from') : web3.eth.accounts[0];
