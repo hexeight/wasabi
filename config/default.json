@@ -1,7 +1,0 @@
-{
-    "host": "",
-    "maxGas": "100000000",
-    "contracts": [
-        "contracts/greeter.sol"
-    ]
-}

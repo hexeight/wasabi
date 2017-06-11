@@ -1,0 +1,27 @@
+console.log("Compile contracts");
+
+var Web3 = require("web3");
+var Solc = require("solc");
+var Config = require("config");
+var fs = require('fs');
+
+var web3 = new Web3();
+
+// Read contracts and create inputs
+var input = {};
+var contracts = Config.get('contracts');
+
+for (var i = 0; i < contracts.length; i++) {
+    // read file
+    console.log("Reading contract:", contracts[i]);
+    var data = fs.readFileSync(contracts[i], 'utf8');
+    input[contracts[i]] = data;
+}
+
+// Compile input
+var output = Solc.compile({ sources: input }, 1);
+
+for (var contract in output.contracts) {
+    console.log("Compiled ", contract, "with estimated gas:");
+    console.log(output.contracts[contract].gasEstimates);
+}
