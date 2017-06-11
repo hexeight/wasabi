@@ -2,7 +2,7 @@
   "name": "wasabi",
   "version": "0.0.1",
   "main": "app.js",
-  "description": "Easy deployments for smart contracts",
+  "description": "Easy deployments for Dapps",
   "author": "Omkar Khair",
   "homepage": "http://0x8.in",
   "keywords": [
