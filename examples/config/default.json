@@ -1,0 +1,5 @@
+{
+	"host": "http://localhost:8545",
+	"maxGas": 100000,
+	"contracts": ["contracts/greeter.sol"]
+}
