@@ -46,6 +46,9 @@ for (var contract in output.contracts) {
     gasQuote[contract] = gas;
 }
 
+// Create contracts.json
+fs.writeFileSync('app/contracts.json', '[]', 'utf8');
+
 // Sign to RPC node
 for (var contract in output.contracts) {
     var code = "0x" + output.contracts[contract].bytecode;
@@ -54,6 +57,7 @@ for (var contract in output.contracts) {
     pushContract(contract, c);
 }
 
+var contractsJSON = [];
 function pushContract (name, c) {
     var x = c.new({
         from: fromAddress,
@@ -78,9 +82,9 @@ function pushContract (name, c) {
 function writeSolJSON(name, address, abi) {
     source = name.split(":")[0];
     name = name.split(":")[1];
-    var conf = JSON.stringify({ source: source, name: name, address: address, abi: abi });
-    fs.writeFile(source + ".json", conf, (err) => {
-        if (err) throw err;
-        console.log(name + ".json created with address and ABI details.");
-    });
+    var conf = { source: source, name: name, address: address, abi: abi };
+    var contracts = fs.readFileSync('app/contracts.json');
+    contracts = JSON.parse(contracts);
+    contracts.push(conf);
+    fs.writeFileSync('app/contracts.json', JSON.stringify(contracts, null, '\t'));
 }
