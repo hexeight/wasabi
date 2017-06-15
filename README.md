@@ -3,6 +3,9 @@ A command line tool to quickly create JS abstractions for your Ethereum Smart co
 
 # Getting started
 Wasabi is cooking. Check back shortly. I don't promise for anything to work as expected (yet).
+```
+npm install eth-wasabi
+```
 
 ## Initialize
 Create a new project in a directory
