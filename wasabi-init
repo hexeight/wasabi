@@ -17,9 +17,20 @@ fs.writeFile('./config/default.json', JSON.stringify({
     contracts: []
 }, null, "\t"), { flag: 'wx' }, function (err) {
     if (err) throw err;
-    console.log("It's saved!");
+    //console.log("It's saved!");
 });
 // Add app directory
 if (!fs.existsSync('./app')){
     fs.mkdirSync('./app');
 }
+if (!fs.existsSync('./app/js')){
+    fs.mkdirSync('./app/js');
+}
+// Add wasabi files
+var wasabiJs = fs.readFileSync(__dirname + '/static/wasabi.js', 'utf8');
+var appJs = fs.readFileSync(__dirname + '/static/app.js', 'utf8');
+var indexHtml = fs.readFileSync(__dirname + '/static/index.html', 'utf8');
+
+fs.writeFileSync('./app/wasabi.js', wasabiJs, { encoding: 'utf8' });
+fs.writeFileSync('./app/js/app.js', appJs, { encoding: 'utf8' });
+fs.writeFileSync('./app/index.html', indexHtml, { encoding: 'utf8' });
