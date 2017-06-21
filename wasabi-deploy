@@ -52,64 +52,78 @@ for (var contract in output.contracts) {
 fs.writeFileSync('app/contracts.json', '[]', 'utf8');
 
 // Sign to RPC node
-for (var contract in output.contracts) {
-    var code = "0x" + output.contracts[contract].bytecode;
-    var abi = JSON.parse(output.contracts[contract].interface);
-    var c = web3.eth.contract(abi);
-    pushContract(contract, c);
+if (Config.has('private-key')) {
+    pushSignedContract(0);
+}
+else {
+    for (var contract in output.contracts) {
+        var code = "0x" + output.contracts[contract].bytecode;
+        var abi = JSON.parse(output.contracts[contract].interface);
+        var c = web3.eth.contract(abi);
+        pushContract(contract, c);
+    }
 }
 
-function getTransactionReceipt(name, hash, abi) {
+function getTransactionReceipt(name, hash, abi, index) {
     console.log('waiting for contract', name,' to be mined ', hash);
     const receipt = web3.eth.getTransactionReceipt(hash);
     if (receipt == null) {
         setTimeout(() => {
-            getTransactionReceipt(name, hash, abi);
+            getTransactionReceipt(name, hash, abi, index);
         }, 1000);
     } else {
-        console.log("Contract mined! Address: ", receipt.contractAddress);
+        console.log("Contract (", name, ") mined! Address: ", receipt.contractAddress);
         writeSolJSON(name, receipt.contractAddress, abi);
+        // Lookup next contract to deploy
+        if (Object.keys(output.contracts).length > ++index)
+            pushSignedContract(index);
     }
 }
 
 var contractsJSON = [];
+
+function pushSignedContract (index) {
+    console.log("Self signing contract ", Object.keys(output.contracts)[index]);
+    var name = Object.keys(output.contracts)[index];
+    var code = "0x" + output.contracts[name].bytecode;
+    var abi = JSON.parse(output.contracts[name].interface);
+    var c = web3.eth.contract(abi);
+
+    console.log("Preparing ", name);
+    const privateKey = new Buffer(Config.get('private-key'), 'hex');
+    const fromAddress = wallet.fromPrivateKey(privateKey).getAddressString();
+    const contractData = c.new.getData({
+        data: '0x' + c.bytecode
+    });
+
+    const nonce = web3.eth.getTransactionCount(fromAddress);
+    const nonceHex = web3.toHex(nonce);
+    console.log("nonce ", nonceHex);
+
+    const rawTx = {
+        nonce: nonceHex,
+        gasPrice: web3.toHex(web3.eth.gasPrice),
+        gasLimit: web3.toHex(gasQuote[name]),
+        data: contractData,
+        from: fromAddress
+    };
+
+    const tx = new Tx(rawTx);
+    tx.sign(privateKey);
+    const serializedTx = tx.serialize();
+    console.log("Deploying ", name, serializedTx.toString('hex'));
+    web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), (err, hash) => {
+        if (err) { console.log(err); return; }
+        // Log the tx, you can explore status manually with eth.getTransaction()
+        console.log("Contract transaction pushed: TransactionHash (", hash, ") waiting to be mined...");
+        // Wait for the transaction to be mined
+        getTransactionReceipt(name, hash, c.abi, index);
+    });
+
+    return;
+}
+
 function pushContract (name, c) {
-    // If private key is provided, use it.
-    if (Config.has('private-key')) {
-        console.log("Preparing ", name);
-        const privateKey = new Buffer(Config.get('private-key'), 'hex');
-        const fromAddress = wallet.fromPrivateKey(privateKey).getAddressString();
-        const contractData = c.new.getData({
-            data: '0x' + c.bytecode
-        });
-
-        const nonce = web3.eth.getTransactionCount(fromAddress);
-        const nonceHex = web3.toHex(nonce);
-        console.log("nonce ", nonceHex);
-
-        const rawTx = {
-            nonce: nonceHex,
-            gasPrice: web3.toHex(web3.eth.gasPrice),
-            gasLimit: web3.toHex(gasQuote[name]),
-            data: contractData,
-            from: fromAddress
-        };
-
-        const tx = new Tx(rawTx);
-        tx.sign(privateKey);
-        const serializedTx = tx.serialize();
-        console.log("Deploying ", name, serializedTx.toString('hex'));
-        web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), (err, hash) => {
-            if (err) { console.log(err); return; }
-            // Log the tx, you can explore status manually with eth.getTransaction()
-            console.log("Contract transaction pushed: TransactionHash (", hash, ") waiting to be mined...");
-            // Wait for the transaction to be mined
-            getTransactionReceipt(name, hash, c.abi);
-        });
-
-        return;
-    }
-
     var x = c.new({
         from: fromAddress,
         data: code,
