@@ -4,13 +4,15 @@ var Web3 = require("web3");
 var Solc = require("solc");
 var Config = require("config");
 var fs = require('fs');
+var Tx = require('ethereumjs-tx');
+var wallet = require('ethereumjs-wallet');
 
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(Config.get('host')));
 
 // Set Gas price
-var gasPrice = Config.get('maxGas');
-console.log("Max gas price set to:", gasPrice);
+var maxGas = Config.get('maxGas');
+console.log("Max gas price set to:", maxGas);
 
 // Set address
 var fromAddress = (Config.has('from')) ? Config.get('from') : web3.eth.accounts[0];
@@ -40,7 +42,7 @@ for (var contract in output.contracts) {
         data: code
     });
     console.log("Contract ", contract, ": estimated gas ", gas);
-    if (gas > gasPrice) {
+    if (gas > maxGas) {
         throw new Error("Gas price estimate is higher than made maxGas.");
     }
     gasQuote[contract] = gas;
@@ -57,8 +59,57 @@ for (var contract in output.contracts) {
     pushContract(contract, c);
 }
 
+function getTransactionReceipt(name, hash, abi) {
+    console.log('waiting for contract', name,' to be mined ', hash);
+    const receipt = web3.eth.getTransactionReceipt(hash);
+    if (receipt == null) {
+        setTimeout(() => {
+            getTransactionReceipt(name, hash, abi);
+        }, 1000);
+    } else {
+        console.log("Contract mined! Address: ", receipt.contractAddress);
+        writeSolJSON(name, receipt.contractAddress, abi);
+    }
+}
+
 var contractsJSON = [];
 function pushContract (name, c) {
+    // If private key is provided, use it.
+    if (Config.has('private-key')) {
+        console.log("Preparing ", name);
+        const privateKey = new Buffer(Config.get('private-key'), 'hex');
+        const fromAddress = wallet.fromPrivateKey(privateKey).getAddressString();
+        const contractData = c.new.getData({
+            data: '0x' + c.bytecode
+        });
+
+        const nonce = web3.eth.getTransactionCount(fromAddress);
+        const nonceHex = web3.toHex(nonce);
+        console.log("nonce ", nonceHex);
+
+        const rawTx = {
+            nonce: nonceHex,
+            gasPrice: web3.toHex(web3.eth.gasPrice),
+            gasLimit: web3.toHex(gasQuote[name]),
+            data: contractData,
+            from: fromAddress
+        };
+
+        const tx = new Tx(rawTx);
+        tx.sign(privateKey);
+        const serializedTx = tx.serialize();
+        console.log("Deploying ", name, serializedTx.toString('hex'));
+        web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), (err, hash) => {
+            if (err) { console.log(err); return; }
+            // Log the tx, you can explore status manually with eth.getTransaction()
+            console.log("Contract transaction pushed: TransactionHash (", hash, ") waiting to be mined...");
+            // Wait for the transaction to be mined
+            getTransactionReceipt(name, hash, c.abi);
+        });
+
+        return;
+    }
+
     var x = c.new({
         from: fromAddress,
         data: code,
