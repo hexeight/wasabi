@@ -16,7 +16,7 @@ console.log("Max gas price set to:", maxGas);
 
 // Set address
 var fromAddress = (Config.has('from')) ? Config.get('from') : web3.eth.accounts[0];
-if (fromAddress == null)
+if (fromAddress == null && Config.has())
     throw new Error("Contract author address not set!");
 
 // Read contracts and create inputs
