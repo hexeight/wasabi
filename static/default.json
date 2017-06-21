@@ -1,0 +1,12 @@
+{
+    // http endpoint for JSON RPC
+	"host": "https://ropsten.infura.io/<YOUR KEY HERE>",
+    // Maximum gas budget for a contract
+    "max_gas": "100000000",
+    // Deploy contract from address
+    "from": "0x00000000000000000000",
+    // Use private key to sign transactions in wasabi
+	//"private_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    // Path to contract files
+	"contracts": []
+}
