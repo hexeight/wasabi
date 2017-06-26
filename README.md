@@ -44,9 +44,9 @@ wasabi deploy
 ```
 
 ## Demo
-Create a new project in a directory
+Run a http server running at `http://localhost:8888` hosting static files in the `app` directory to test your Dapp.
 ```
 wasabi serve
 ```
 
-Note: Wasabi is being used for my personal projects to understand JSON RPC interactions essentional for a fully function Dapp. All the features are built to serve my own desperate needs. If you'd love to do something, feel free to go crazy with nice and descriptive pull requests.
+Note: Wasabi is being used for my personal projects to understand JSON RPC interactions essentional for a fully function Dapp. All the features are built to serve my own desperate needs. If you'd love to do something, feel free to go crazy with nice and descriptive issues, feature requests or pull requests.
