@@ -21,12 +21,16 @@ for (var i = 0; i < contracts.length; i++) {
 // Compile input
 try {
     var output = Solc.compile({ sources: input }, 1);
-
-    console.log(output);
-
-    for (var contract in output.contracts) {
-        console.log("Compiled ", contract, "with estimated gas:");
-        console.log(output.contracts[contract].gasEstimates);
+    console.log("Compile failed! Refer to errors below.");
+    if (output.errors) {
+        output.errors.forEach(function(err) {
+            console.log(err);
+        }, this);
+    }
+    else {
+        for (var contract in output.contracts) {
+            console.log("Successfully compiled: ", contract);
+        }
     }
 }
 catch (ex) {

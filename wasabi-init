@@ -10,12 +10,11 @@ if (!fs.existsSync('./contracts')){
 if (!fs.existsSync('./config')){
     fs.mkdirSync('./config');
 }
+
+var wasabiConfig = fs.readFileSync(__dirname + '/static/default.json', 'utf8');
+
 // Add dummy config
-fs.writeFile('./config/default.json', JSON.stringify({
-    host: 'http://localhost:8545',
-    maxGas: 100000,
-    contracts: []
-}, null, "\t"), { flag: 'wx' }, function (err) {
+fs.writeFile('./config/default.json', wasabiConfig, { flag: 'wx' }, function (err) {
     if (err) throw err;
     //console.log("It's saved!");
 });
