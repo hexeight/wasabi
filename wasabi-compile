@@ -22,11 +22,8 @@ for (var i = 0; i < contracts.length; i++) {
 try {
     var output = Solc.compile({ sources: input }, 1);
 
-    console.log(output);
-
     for (var contract in output.contracts) {
-        console.log("Compiled ", contract, "with estimated gas:");
-        console.log(output.contracts[contract].gasEstimates);
+        console.log("Successfully compiled: ", contract);
     }
 }
 catch (ex) {

@@ -11,7 +11,7 @@ var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(Config.get('host')));
 
 // Set Gas price
-var maxGas = Config.get('maxGas');
+var maxGas = Config.get('max_gas');
 console.log("Max gas price set to:", maxGas);
 
 // Set address
@@ -52,7 +52,7 @@ for (var contract in output.contracts) {
 fs.writeFileSync('app/contracts.json', '[]', 'utf8');
 
 // Sign to RPC node
-if (Config.has('private-key')) {
+if (Config.has('private_key')) {
     pushSignedContract(0);
 }
 else {
@@ -90,15 +90,14 @@ function pushSignedContract (index) {
     var c = web3.eth.contract(abi);
 
     console.log("Preparing ", name);
-    const privateKey = new Buffer(Config.get('private-key'), 'hex');
+    const privateKey = new Buffer(Config.get('private_key'), 'hex');
     const fromAddress = wallet.fromPrivateKey(privateKey).getAddressString();
     const contractData = c.new.getData({
-        data: '0x' + c.bytecode
+        data: code
     });
 
     const nonce = web3.eth.getTransactionCount(fromAddress);
     const nonceHex = web3.toHex(nonce);
-    console.log("nonce ", nonceHex);
 
     const rawTx = {
         nonce: nonceHex,
@@ -111,7 +110,6 @@ function pushSignedContract (index) {
     const tx = new Tx(rawTx);
     tx.sign(privateKey);
     const serializedTx = tx.serialize();
-    console.log("Deploying ", name, serializedTx.toString('hex'));
     web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), (err, hash) => {
         if (err) { console.log(err); return; }
         // Log the tx, you can explore status manually with eth.getTransaction()
