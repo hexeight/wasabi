@@ -1,5 +1,5 @@
 # wasabi
-A command line tool/utility to quickly create JS abstractions for your Ethereum Smart contracts. Wasabi creates JS objects that allow you to easily deploy and interact with Ethereum Smart contracts.
+A command line tool/utility to quickly create JS abstractions for your Ethereum Smart contracts. Wasabi creates JS objects that allow you to easily deploy and interact with Ethereum Smart contracts. Read more about why I built Wasabi [http://0x8.in/eth-wasabi/](http://0x8.in/eth-wasabi/).
 
 # Getting started
 Install wasabi globally.
