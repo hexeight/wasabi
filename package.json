@@ -1,6 +1,6 @@
 {
   "name": "eth-wasabi",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "app.js",
   "description": "Easy deployments for Dapps",
   "author": "Omkar Khair",
