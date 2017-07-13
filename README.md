@@ -7,6 +7,9 @@ Install wasabi globally.
 npm install eth-wasabi -g
 ```
 
+### Quick start tutorial
+[![Building and Deploying contracts with Wasabi](https://img.youtube.com/vi/z6ACHroi3zY/0.jpg)](https://www.youtube.com/watch?v=z6ACHroi3zY)
+
 ## Initialize
 Create a new project in a directory. Creates directories for contracts, config and app.
 ```
