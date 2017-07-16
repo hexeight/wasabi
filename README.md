@@ -19,23 +19,23 @@ wasabi init
 ## Configure
 Wasabi can be configured to use an account on the RPC OR provide a `private_key` to sign contract deployment transactions locally. Local signing is helpful when using Infura or other public RPC nodes. If a `private_key` is provided, the `from` address will be ignored, and wasabi will perform client side signing for deployment transactions.
 
-```
+```json
 {
     // http endpoint for JSON RPC e.g. http://localhost:8545
-	"host": "http://localhost:8545",
+    "host": "http://localhost:8545",
     // Maximum gas budget for a contract
     "max_gas": "100000000",
     // Deploy contract from address
     "from": "0x00000000000000000000",
     // Use private key to sign transactions in wasabi
-	//"private_key": "YOUR_PRIVATE_KEY",
+    //"private_key": "YOUR_PRIVATE_KEY",
     // Path to contract files
-	"contracts": ["contracts/SimpleStorage.sol"]
+    "contracts": ["contracts/SimpleStorage.sol"]
 }
 ```
 
 ## Compile
-Complile solidity contracts listed in config and compile check for errors.
+Complile solidity contracts listed in config and compile check for errors. Wasabi uses 'solc' for copiling solidity contracts.
 ```
 wasabi compile
 ```
@@ -45,6 +45,9 @@ Deploy solidity contracts through the RPC node provided in config.
 ```
 wasabi deploy
 ```
+
+### Developing Dapps
+On successful `wasabi deploy`, the contract address and ABI are made available in `app/contracts.json`. A scaffolded JS in also available in `app/wasabi.js`, which can be used in Dapps to populate `web3` contracts instances using `contracts.json`.
 
 ## Demo
 Run a http server running at `http://localhost:8888` hosting static files in the `app` directory to test your Dapp.
