@@ -19,7 +19,7 @@ wasabi init
 ## Configure
 Wasabi can be configured to use an account on the RPC OR provide a `private_key` to sign contract deployment transactions locally. Local signing is helpful when using Infura or other public RPC nodes. If a `private_key` is provided, the `from` address will be ignored, and wasabi will perform client side signing for deployment transactions.
 
-```json
+```js
 {
     // http endpoint for JSON RPC e.g. http://localhost:8545
     "host": "http://localhost:8545",
