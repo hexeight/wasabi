@@ -1,27 +1,19 @@
 (function () {
-    // ####
     Wasabi = {};
     function initWasabi () {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() { 
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var config = JSON.parse(xmlHttp.responseText);
-                config.forEach(function (contract, index) {
-                    var definition = web3.eth.contract(contract.abi);
-                    var c = definition.at(contract.address);
-                    Wasabi[contract.name] = {
-                        deployed: function () {
-                            return c;
-                        },
-                        at: function (address) {
-                            return definition.at(address);
-                        }
-                    };
-                });
-            }
-        }
-        xmlHttp.open("GET", "/contracts.json", true);
-        xmlHttp.send(null);
+        // ####
+        config.forEach(function (contract, index) {
+            var definition = web3.eth.contract(contract.abi);
+            var c = definition.at(contract.address);
+            Wasabi[contract.name] = {
+                deployed: function () {
+                    return c;
+                },
+                at: function (address) {
+                    return definition.at(address);
+                }
+            };
+        });
     }
 
     window.addEventListener('load', function() {
