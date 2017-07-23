@@ -1,4 +1,5 @@
 (function () {
+    // ####
     Wasabi = {};
     function initWasabi () {
         var xmlHttp = new XMLHttpRequest();
