@@ -147,11 +147,11 @@ function writeSolJSON(name, address, abi) {
     name = name.split(":")[1];
     var conf = { source: source, name: name, address: address, abi: abi };
     var contracts = fs.readFileSync('app/contracts.json');
-    contracts = JSON.parse(contracts);
+    contracts = JSON.parse(contracts.toString());
 
     // write object to wasabi.js
     var wasabiJS = fs.readFileSync('app/wasabi.js');
-    wasabiJS = wasabiJS.replace("// ####", "var config = " + JSON.stringify(contracts) + ";");
+    wasabiJS = wasabiJS.toString().replace("// ####", "var config = " + JSON.stringify(contracts) + ";");
     fs.writeFileSync('app/wasabi.js', wasabiJS);
 
     // write object to portable JSON
