@@ -9,6 +9,7 @@ npm install eth-wasabi -g
 
 ### Quick start tutorial
 [![Building and Deploying contracts with Wasabi](https://img.youtube.com/vi/z6ACHroi3zY/0.jpg)](https://www.youtube.com/watch?v=z6ACHroi3zY)
+Note: This demo is using v0.0.5. Starting v0.0.6 wasabi does not use global variables for contract objects. All contract objects are to found under a global namespace `Wasabi`. Example: `Wasabi.Greeter`.
 
 ## Initialize
 Create a new project in a directory. Creates directories for contracts, config and app.
